@@ -56,7 +56,7 @@ def get_python_vacancies_salaries() -> None:
 def predict_rub_salary(vacancy: dict) -> int | None:
     vacancy_salary = vacancy['salary']
 
-    if vacancy_salary is None:
+    if vacancy_salary is None or vacancy_salary['currency'] != 'RUR':
         return None
     elif vacancy_salary['from'] is None:
         return vacancy_salary['to'] * 0.8
