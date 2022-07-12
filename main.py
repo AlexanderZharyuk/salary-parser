@@ -31,5 +31,27 @@ def get_programmers_vacancies() -> dict:
     return languages_vacancies
 
 
+def get_python_vacancies_salaries() -> None:
+    programmers_id = 96
+    city_id = 1
+
+    url = 'https://api.hh.ru/vacancies'
+    params = {
+        'text': 'Программист Python',
+        'area': city_id,
+        'professional_role': programmers_id,
+        'per_page': 20,
+        'archived': False,
+        'search_period': 30
+    }
+
+    response = requests.get(url=url, params=params)
+    response.raise_for_status()
+    vacancies = response.json()['items']
+
+    for vacancy in vacancies:
+        print(vacancy['salary'])
+
+
 if __name__ == '__main__':
-    pprint(get_programmers_vacancies())
+    print(get_python_vacancies_salaries())
