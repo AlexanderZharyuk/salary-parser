@@ -50,7 +50,20 @@ def get_python_vacancies_salaries() -> None:
     vacancies = response.json()['items']
 
     for vacancy in vacancies:
-        print(vacancy['salary'])
+        print(predict_rub_salary(vacancy))
+
+
+def predict_rub_salary(vacancy: dict) -> int | None:
+    vacancy_salary = vacancy['salary']
+
+    if vacancy_salary is None:
+        return None
+    elif vacancy_salary['from'] is None:
+        return vacancy_salary['to'] * 0.8
+    elif vacancy_salary['to'] is None:
+        return vacancy_salary['from'] * 1.2
+
+    return (vacancy_salary['from'] + vacancy_salary['to']) / 2
 
 
 if __name__ == '__main__':
