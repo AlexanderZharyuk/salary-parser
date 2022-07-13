@@ -2,12 +2,13 @@ import os
 import time
 
 from itertools import count
-from pprint import pprint
 
 import requests
 
 from dotenv import load_dotenv
 from tqdm import tqdm
+
+from table import show_table
 
 
 def get_vacancies(secret_key: str, keywoard: str) -> dict:
@@ -95,4 +96,6 @@ def parse_superjob_vacancies() -> dict:
 
 
 if __name__ == '__main__':
-    pprint(parse_superjob_vacancies())
+    superjob_table_title = 'SuperJob Moscow'
+    show_table(vacancies=parse_superjob_vacancies(),
+               table_title=superjob_table_title)
