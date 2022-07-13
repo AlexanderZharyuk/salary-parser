@@ -29,22 +29,21 @@ def get_vacancy(programmer_language: str, city_id: int) -> Vacancy:
                    total_vacancies=vacancies['found'])
 
 
-def get_programmers_vacancies() -> dict:
-    city_id = 1
-
-    programmers_languages = ['Javascript', 'Java', 'Python', 'Ruby', 'PHP',
-                             'C++', 'C#']
+def get_programmers_vacancies(program_languages: list, city_id: int) -> dict:
     founded_vacancies = {}
 
-    for language in tqdm(programmers_languages,
-                         desc='Parse vacancies',
-                         unit='vacancy'):
+    for language in tqdm(program_languages,
+                         miniters=1,
+                         unit='program_language',
+                         desc='Parse hh vacancies'):
+        tqdm.write(f'Parse {language} vacancies...')
         vacancies = get_vacancy(
             programmer_language=language,
             city_id=city_id
         )
         vacancy_salaries = get_vacancy_salaries(language=language,
-                                                pages=vacancies.total_pages)
+                                                pages=vacancies.total_pages,
+                                                city_id=city_id)
 
         founded_vacancies[language] = {
             "vacancies_found": vacancies.total_vacancies,
@@ -60,8 +59,8 @@ class ProcessedVacancies(NamedTuple):
     vacancies_processed: int
 
 
-def get_vacancy_salaries(language: str, pages: int) -> ProcessedVacancies:
-    city_id = 1
+def get_vacancy_salaries(language: str, pages: int, city_id: int) \
+        -> ProcessedVacancies:
     url = 'https://api.hh.ru/vacancies'
 
     processed_vacancies_salaries = []
@@ -94,18 +93,36 @@ def get_vacancy_salaries(language: str, pages: int) -> ProcessedVacancies:
                               vacancies_processed=vacancies_processed)
 
 
+def predict_salary(salary_from: int, salary_to: int) -> int | None:
+    if not salary_from and not salary_to:
+        return None
+    elif not salary_from:
+        return int(salary_to * 0.8)
+    elif not salary_to:
+        return int(salary_from * 1.2)
+
+    return (salary_to + salary_from) // 2
+
+
 def predict_rub_salary(vacancy: dict) -> float | None:
     vacancy_salary = vacancy['salary']
-
     if vacancy_salary is None or vacancy_salary['currency'] != 'RUR':
         return None
-    elif vacancy_salary['from'] is None:
-        return vacancy_salary['to'] * 0.8
-    elif vacancy_salary['to'] is None:
-        return vacancy_salary['from'] * 1.2
 
-    return (vacancy_salary['from'] + vacancy_salary['to']) / 2
+    vacancy_salary_from = vacancy_salary['from']
+    vacancy_salary_to = vacancy_salary['to']
+
+    return predict_salary(salary_from=vacancy_salary_from,
+                          salary_to=vacancy_salary_to)
+
+
+def parse_hh_vacancies():
+    city_id = 1
+    program_languages = ['Javascript', 'Java', 'Python', 'Ruby', 'PHP',
+                         'C++', 'C#']
+    print(get_programmers_vacancies(program_languages=program_languages,
+                                    city_id=city_id))
 
 
 if __name__ == '__main__':
-    pprint(get_programmers_vacancies())
+    parse_hh_vacancies()
