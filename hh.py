@@ -1,3 +1,4 @@
+import time
 from pprint import pprint
 from typing import NamedTuple
 from itertools import count
@@ -34,10 +35,10 @@ def get_programmers_vacancies(program_languages: list, city_id: int) -> dict:
     progress_bar = tqdm(program_languages,
                         miniters=1,
                         unit='program_language',
-                        desc='Parse hh vacancies')
+                        desc='HeadHunter vacancies')
 
     for language in progress_bar:
-        tqdm.write(f'Parse {language} vacancies...')
+        tqdm.write(f'Parsing {language} vacancies...')
         vacancies = get_vacancy(
             programmer_language=language,
             city_id=city_id
@@ -77,8 +78,17 @@ def get_vacancy_salaries(language: str, pages: int, city_id: int) \
             'page': page,
         }
 
-        response = requests.get(url=url, params=params)
-        response.raise_for_status()
+        try:
+            response = requests.get(url=url, params=params)
+            response.raise_for_status()
+        except requests.ConnectionError:
+            print('Get ConnectionError. Going to sleep 1 min')
+            time.sleep(60)
+            continue
+        except requests.HTTPError:
+            print('Get HttpError. Trying reconnect...')
+            continue
+
         vacancies = response.json()['items']
         for vacancy in vacancies:
             if predict_rub_salary(vacancy) is not None:
