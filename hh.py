@@ -1,11 +1,12 @@
 import time
-from pprint import pprint
 from typing import NamedTuple
 from itertools import count
 
 import requests
 
 from tqdm import tqdm
+
+from table import show_table
 
 
 class Vacancy(NamedTuple):
@@ -136,4 +137,5 @@ def parse_hh_vacancies() -> dict:
 
 
 if __name__ == '__main__':
-    pprint(parse_hh_vacancies())
+    hh_table_title = 'HeadHunter Moscow'
+    show_table(vacancies=parse_hh_vacancies(), table_title=hh_table_title)
