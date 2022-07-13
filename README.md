@@ -46,8 +46,8 @@ python3 superjob.py
 
 ## Создано при помощи
 * [Devman](https://dvmn.org/) - Обучающая платформа
-* [HH](https://hh.ru/)
-* [SuperJob](https://www.superjob.ru/)
+* [HH](https://hh.ru/) - Сайт с вакансиями
+* [SuperJob](https://www.superjob.ru/) - Сайт с вакансиями
 
 ## Автор
 [Alexander Zharyuk](https://github.com/AlexanderZharyuk/)
