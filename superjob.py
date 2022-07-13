@@ -1,12 +1,13 @@
 import os
+import time
 
 from itertools import count
 from pprint import pprint
 
 import requests
 
-from tqdm import tqdm
 from dotenv import load_dotenv
+from tqdm import tqdm
 
 
 def get_vacancies(secret_key: str, keywoard: str) -> dict:
@@ -24,8 +25,16 @@ def get_vacancies(secret_key: str, keywoard: str) -> dict:
             'count': 20,
         }
 
-        response = requests.get(url=url, headers=headers, params=params)
-        response.raise_for_status()
+        try:
+            response = requests.get(url=url, headers=headers, params=params)
+            response.raise_for_status()
+        except requests.ConnectionError:
+            print('Get ConnectionError. Going to sleep 1 min.')
+            time.sleep(60)
+            continue
+        except requests.HTTPError:
+            print('Get HttpError. Trying reconnect...')
+            continue
 
         vacancies_on_page = response.json()['objects']
 
@@ -78,7 +87,7 @@ def parse_superjob_vacancies() -> dict:
                         desc='SuperJob vacancies')
 
     for language in progress_bar:
-        tqdm.write(f'Parse {language} vacancies...')
+        tqdm.write(f'Parsing {language} vacancies...')
         vacancies[language] = get_vacancies(keywoard=language,
                                             secret_key=superjob_secret_key)
 
