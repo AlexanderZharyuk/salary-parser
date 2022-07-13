@@ -33,12 +33,12 @@ def get_vacancies(secret_key: str, keywoard: str) -> dict:
             total_vacancies = response.json()['total']
             vacancies_processed = len(total_salaries)
             average_salary = int(sum(total_salaries) / vacancies_processed)
-            program_language_vacancies = {
+            programing_language_vacancies = {
                 'vacancies_found': total_vacancies,
                 'vacancies_processed': vacancies_processed,
                 'average_salary': average_salary
             }
-            return program_language_vacancies
+            return programing_language_vacancies
 
         for vacancy in vacancies_on_page:
             if predict_rub_salary(vacancy) is not None:
@@ -65,14 +65,14 @@ def predict_rub_salary(vacancy: dict) -> int | None:
     return predict_salary(salary_from=salary_from, salary_to=salary_to)
 
 
-def main():
+def parse_superjob_vacancies() -> dict:
     load_dotenv()
     superjob_secret_key = os.environ['SUPERJOB_SECRET_KEY']
-    programmers_languages = ['Javascript', 'Java', 'Python', 'Ruby',
+    programming_languages = ['Javascript', 'Java', 'Python', 'Ruby',
                              'PHP', 'C++', 'C#']
 
     vacancies = {}
-    progress_bar = tqdm(programmers_languages,
+    progress_bar = tqdm(programming_languages,
                         miniters=1,
                         unit='program_language',
                         desc='SuperJob vacancies')
@@ -82,8 +82,8 @@ def main():
         vacancies[language] = get_vacancies(keywoard=language,
                                             secret_key=superjob_secret_key)
 
-    pprint(vacancies)
+    return vacancies
 
 
 if __name__ == '__main__':
-    main()
+    pprint(parse_superjob_vacancies())
