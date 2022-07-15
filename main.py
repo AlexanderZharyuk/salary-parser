@@ -1,11 +1,14 @@
 from superjob import parse_superjob_vacancies
 from hh import parse_hh_vacancies
-from table import show_table
+from general_functions import show_table, get_superjob_secret_key
 
 
 if __name__ == '__main__':
+    superjob_secret_key = get_superjob_secret_key()
     superjob_table_title = 'SuperJob Moscow'
-    superjob_vacancies = parse_superjob_vacancies()
+    superjob_vacancies = parse_superjob_vacancies(
+        secret_key=superjob_secret_key
+    )
 
     hh_table_title = 'HeadHunter Moscow'
     hh_vacancies = parse_hh_vacancies()
