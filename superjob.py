@@ -1,14 +1,12 @@
-import os
 import time
 
 from itertools import count
 
 import requests
 
-from dotenv import load_dotenv
 from tqdm import tqdm
 
-from table import show_table
+from general_functions import show_table, get_superjob_secret_key
 
 
 def get_vacancies(secret_key: str, keywoard: str) -> dict:
@@ -75,9 +73,7 @@ def predict_rub_salary(vacancy: dict) -> int | None:
     return predict_salary(salary_from=salary_from, salary_to=salary_to)
 
 
-def parse_superjob_vacancies() -> dict:
-    load_dotenv()
-    superjob_secret_key = os.environ['SUPERJOB_SECRET_KEY']
+def parse_superjob_vacancies(secret_key: str) -> dict:
     programming_languages = ['Javascript', 'Java', 'Python', 'Ruby',
                              'PHP', 'C++', 'C#']
 
@@ -90,12 +86,17 @@ def parse_superjob_vacancies() -> dict:
     for language in progress_bar:
         tqdm.write(f'Parsing {language} vacancies...')
         vacancies[language] = get_vacancies(keywoard=language,
-                                            secret_key=superjob_secret_key)
+                                            secret_key=secret_key)
 
     return vacancies
 
 
-if __name__ == '__main__':
+def main() -> None:
+    superjob_secret_key = get_superjob_secret_key()
     superjob_table_title = 'SuperJob Moscow'
-    show_table(vacancies=parse_superjob_vacancies(),
+    show_table(vacancies=parse_superjob_vacancies(superjob_secret_key),
                table_title=superjob_table_title)
+
+
+if __name__ == '__main__':
+    main()
