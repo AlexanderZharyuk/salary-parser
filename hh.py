@@ -9,30 +9,6 @@ from tqdm import tqdm
 from general_functions import show_table
 
 
-class Vacancy(NamedTuple):
-    total_pages: int
-    total_vacancies: int
-
-
-def get_vacancy(programmer_language: str) -> Vacancy:
-    url = 'https://api.hh.ru/vacancies'
-    moscow_city_id = 4
-    during_time_in_days = 30
-    params = {
-        'text': f'Программист {programmer_language}',
-        'area': moscow_city_id,
-        'archived': False,
-        'search_period': during_time_in_days,
-    }
-
-    response = requests.get(url=url, params=params)
-    response.raise_for_status()
-    vacancies = response.json()
-
-    return Vacancy(total_pages=vacancies['pages'],
-                   total_vacancies=vacancies['found'])
-
-
 def get_programmers_vacancies(program_languages: list) -> dict:
     founded_vacancies = {}
     progress_bar = tqdm(program_languages,
@@ -42,12 +18,10 @@ def get_programmers_vacancies(program_languages: list) -> dict:
 
     for language in progress_bar:
         tqdm.write(f'Parsing {language} vacancies...')
-        vacancies = get_vacancy(programmer_language=language)
-        vacancy_salaries = get_vacancy_salaries(language=language,
-                                                pages=vacancies.total_pages)
+        vacancy_salaries = get_vacancy_salaries(language=language)
 
         founded_vacancies[language] = {
-            "vacancies_found": vacancies.total_vacancies,
+            "vacancies_found": vacancy_salaries.total_vacancies,
             'vacancies_processed': vacancy_salaries.vacancies_processed,
             "average_salary": vacancy_salaries.average_salary
         }
@@ -56,28 +30,36 @@ def get_programmers_vacancies(program_languages: list) -> dict:
 
 
 class ProcessedVacancies(NamedTuple):
+    total_vacancies: int
     average_salary: int
     vacancies_processed: int
 
 
-def get_vacancy_salaries(language: str, pages: int) -> ProcessedVacancies:
+def get_vacancy_salaries(language: str) -> ProcessedVacancies:
     url = 'https://api.hh.ru/vacancies'
     moscow_city_id = 4
     during_time_in_days = 30
+
+    params = {
+        'text': f'Программист {language}',
+        'area': moscow_city_id,
+        'archived': False,
+        'search_period': during_time_in_days,
+    }
+
+    response = requests.get(url=url, params=params)
+    response.raise_for_status()
+
+    response_json = response.json()
+    pages = response_json['pages']
+    total_vacancies = response_json['found']
 
     processed_vacancies_salaries = []
     for page in count(0):
         if page >= pages:
             break
 
-        params = {
-            'text': f'Программист {language}',
-            'area': moscow_city_id,
-            'archived': False,
-            'search_period': during_time_in_days,
-            'page': page,
-        }
-
+        params['page'] = page
         try:
             response = requests.get(url=url, params=params)
             response.raise_for_status()
@@ -104,7 +86,8 @@ def get_vacancy_salaries(language: str, pages: int) -> ProcessedVacancies:
         average_salary = 0
 
     return ProcessedVacancies(average_salary=average_salary,
-                              vacancies_processed=vacancies_processed)
+                              vacancies_processed=vacancies_processed,
+                              total_vacancies=total_vacancies)
 
 
 def predict_salary(salary_from: int, salary_to: int) -> int | None:
