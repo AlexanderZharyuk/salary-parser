@@ -89,7 +89,8 @@ def get_vacancy_salaries(language: str, pages: int) -> ProcessedVacancies:
             print('Get HttpError. Trying reconnect...')
             continue
 
-        vacancies = response.json()['items']
+        json_response = response.json()
+        vacancies = json_response['items']
         for vacancy in vacancies:
             if predict_rub_salary(vacancy) is not None:
                 processed_vacancies_salaries.append(vacancy)
