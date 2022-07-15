@@ -10,6 +10,17 @@ def get_superjob_secret_key() -> str:
     return os.environ['SUPERJOB_SECRET_KEY']
 
 
+def predict_salary(salary_from: int, salary_to: int) -> int | None:
+    if not salary_from and not salary_to:
+        return None
+    elif not salary_from:
+        return int(salary_to * 0.8)
+    elif not salary_to:
+        return int(salary_from * 1.2)
+
+    return (salary_to + salary_from) // 2
+
+
 def show_table(vacancies: dict, table_title: str) -> None:
     table_rows = [
         [

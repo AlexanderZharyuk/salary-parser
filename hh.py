@@ -6,7 +6,7 @@ import requests
 
 from tqdm import tqdm
 
-from general_functions import show_table
+from general_functions import show_table, predict_salary
 
 
 def get_programmers_vacancies(program_languages: list) -> dict:
@@ -88,17 +88,6 @@ def get_vacancy_salaries(language: str) -> ProcessedVacancies:
     return ProcessedVacancies(average_salary=average_salary,
                               vacancies_processed=vacancies_processed,
                               total_vacancies=total_vacancies)
-
-
-def predict_salary(salary_from: int, salary_to: int) -> int | None:
-    if not salary_from and not salary_to:
-        return None
-    elif not salary_from:
-        return int(salary_to * 0.8)
-    elif not salary_to:
-        return int(salary_from * 1.2)
-
-    return (salary_to + salary_from) // 2
 
 
 def predict_rub_salary(vacancy: dict) -> float | None:

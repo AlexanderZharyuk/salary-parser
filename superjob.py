@@ -6,7 +6,8 @@ import requests
 
 from tqdm import tqdm
 
-from general_functions import show_table, get_superjob_secret_key
+from general_functions import (show_table, get_superjob_secret_key,
+                               predict_salary)
 
 
 def get_vacancies(secret_key: str, keywoard: str) -> dict:
@@ -55,17 +56,6 @@ def get_vacancies(secret_key: str, keywoard: str) -> dict:
             vacancy_salary = predict_rub_salary(vacancy)
             if vacancy_salary:
                 total_salaries.append(vacancy_salary)
-
-
-def predict_salary(salary_from: int, salary_to: int) -> int | None:
-    if not salary_from and not salary_to:
-        return None
-    elif not salary_from:
-        return int(salary_to * 0.8)
-    elif not salary_to:
-        return int(salary_from * 1.2)
-
-    return (salary_to + salary_from) // 2
 
 
 def predict_rub_salary(vacancy: dict) -> int | None:
