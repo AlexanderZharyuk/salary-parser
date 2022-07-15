@@ -98,7 +98,10 @@ def get_vacancy_salaries(language: str, pages: int) -> ProcessedVacancies:
     all_salaries = [predict_rub_salary(vacancy) for vacancy in
                     processed_vacancies_salaries if
                     predict_rub_salary(vacancy) is not None]
-    average_salary = int(sum(all_salaries) / len(all_salaries))
+    try:
+        average_salary = int(sum(all_salaries) / len(all_salaries))
+    except ZeroDivisionError:
+        average_salary = 0
 
     return ProcessedVacancies(average_salary=average_salary,
                               vacancies_processed=vacancies_processed)
@@ -128,7 +131,7 @@ def predict_rub_salary(vacancy: dict) -> float | None:
 
 
 def parse_hh_vacancies() -> dict:
-    programming_languages = ['Ruby', 'PHP',
+    programming_languages = ['Javascript', 'Java', 'Python', 'Ruby', 'PHP',
                              'C++', 'C#']
     return get_programmers_vacancies(program_languages=programming_languages)
 
