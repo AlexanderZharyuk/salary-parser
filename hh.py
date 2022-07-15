@@ -6,7 +6,7 @@ import requests
 
 from tqdm import tqdm
 
-from table import show_table
+from general_functions import show_table
 
 
 class Vacancy(NamedTuple):
