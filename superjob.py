@@ -40,7 +40,7 @@ def get_vacancies(secret_key: str, keywoard: str) -> dict:
         response_json = response.json()
         vacancies_on_page = response_json['objects']
 
-        if not len(vacancies_on_page):
+        if not vacancies_on_page:
             total_vacancies = response_json['total']
             vacancies_processed = len(total_salaries)
             average_salary = int(sum(total_salaries) / vacancies_processed)
