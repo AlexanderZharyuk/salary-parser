@@ -37,7 +37,7 @@ class ProcessedVacancies(NamedTuple):
 
 def get_vacancy_salaries(language: str) -> ProcessedVacancies:
     url = 'https://api.hh.ru/vacancies'
-    moscow_city_id = 4
+    moscow_city_id = 1
     during_time_in_days = 30
 
     params = {
