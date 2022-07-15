@@ -92,15 +92,14 @@ def get_vacancy_salaries(language: str, pages: int) -> ProcessedVacancies:
         json_response = response.json()
         vacancies = json_response['items']
         for vacancy in vacancies:
-            if predict_rub_salary(vacancy):
-                processed_vacancies_salaries.append(vacancy)
+            vacancy_salary = predict_rub_salary(vacancy)
+            if vacancy_salary:
+                processed_vacancies_salaries.append(vacancy_salary)
 
     vacancies_processed = len(processed_vacancies_salaries)
-    all_salaries = [predict_rub_salary(vacancy) for vacancy in
-                    processed_vacancies_salaries if
-                    predict_rub_salary(vacancy) is not None]
     try:
-        average_salary = int(sum(all_salaries) / len(all_salaries))
+        average_salary = int(sum(processed_vacancies_salaries) /
+                             len(processed_vacancies_salaries))
     except ZeroDivisionError:
         average_salary = 0
 
