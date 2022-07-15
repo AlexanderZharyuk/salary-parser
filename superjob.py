@@ -52,7 +52,7 @@ def get_vacancies(secret_key: str, keywoard: str) -> dict:
             return programing_language_vacancies
 
         for vacancy in vacancies_on_page:
-            if predict_rub_salary(vacancy) is not None:
+            if predict_rub_salary(vacancy):
                 total_salaries.append(predict_rub_salary(vacancy))
 
 

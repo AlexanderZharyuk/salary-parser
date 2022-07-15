@@ -92,7 +92,7 @@ def get_vacancy_salaries(language: str, pages: int) -> ProcessedVacancies:
         json_response = response.json()
         vacancies = json_response['items']
         for vacancy in vacancies:
-            if predict_rub_salary(vacancy) is not None:
+            if predict_rub_salary(vacancy):
                 processed_vacancies_salaries.append(vacancy)
 
     vacancies_processed = len(processed_vacancies_salaries)
@@ -121,7 +121,7 @@ def predict_salary(salary_from: int, salary_to: int) -> int | None:
 
 def predict_rub_salary(vacancy: dict) -> float | None:
     vacancy_salary = vacancy['salary']
-    if vacancy_salary is None or vacancy_salary['currency'] != 'RUR':
+    if not vacancy_salary or vacancy_salary['currency'] != 'RUR':
         return None
 
     vacancy_salary_from = vacancy_salary['from']
