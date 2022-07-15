@@ -14,14 +14,16 @@ def get_vacancies(secret_key: str, keywoard: str) -> dict:
     headers = {
         'X-Api-App-Id': secret_key,
     }
+    moscow_city_id = 4
+    results_per_request = 20
 
     total_salaries = []
     for page in count(0):
         params = {
-            'town': 4,
+            'town': moscow_city_id,
             'keyword': keywoard,
             'page': page,
-            'count': 20,
+            'count': results_per_request,
         }
 
         try:

@@ -14,13 +14,15 @@ class Vacancy(NamedTuple):
     total_vacancies: int
 
 
-def get_vacancy(programmer_language: str, city_id: int) -> Vacancy:
+def get_vacancy(programmer_language: str) -> Vacancy:
     url = 'https://api.hh.ru/vacancies'
+    moscow_city_id = 4
+    during_time_in_days = 30
     params = {
         'text': f'Программист {programmer_language}',
-        'area': city_id,
+        'area': moscow_city_id,
         'archived': False,
-        'search_period': 30,
+        'search_period': during_time_in_days,
     }
 
     response = requests.get(url=url, params=params)
@@ -31,7 +33,7 @@ def get_vacancy(programmer_language: str, city_id: int) -> Vacancy:
                    total_vacancies=vacancies['found'])
 
 
-def get_programmers_vacancies(program_languages: list, city_id: int) -> dict:
+def get_programmers_vacancies(program_languages: list) -> dict:
     founded_vacancies = {}
     progress_bar = tqdm(program_languages,
                         miniters=1,
@@ -40,13 +42,9 @@ def get_programmers_vacancies(program_languages: list, city_id: int) -> dict:
 
     for language in progress_bar:
         tqdm.write(f'Parsing {language} vacancies...')
-        vacancies = get_vacancy(
-            programmer_language=language,
-            city_id=city_id
-        )
+        vacancies = get_vacancy(programmer_language=language)
         vacancy_salaries = get_vacancy_salaries(language=language,
-                                                pages=vacancies.total_pages,
-                                                city_id=city_id)
+                                                pages=vacancies.total_pages)
 
         founded_vacancies[language] = {
             "vacancies_found": vacancies.total_vacancies,
@@ -62,9 +60,10 @@ class ProcessedVacancies(NamedTuple):
     vacancies_processed: int
 
 
-def get_vacancy_salaries(language: str, pages: int, city_id: int) \
-        -> ProcessedVacancies:
+def get_vacancy_salaries(language: str, pages: int) -> ProcessedVacancies:
     url = 'https://api.hh.ru/vacancies'
+    moscow_city_id = 4
+    during_time_in_days = 30
 
     processed_vacancies_salaries = []
     for page in count(0):
@@ -73,9 +72,9 @@ def get_vacancy_salaries(language: str, pages: int, city_id: int) \
 
         params = {
             'text': f'Программист {language}',
-            'area': city_id,
+            'area': moscow_city_id,
             'archived': False,
-            'search_period': 30,
+            'search_period': during_time_in_days,
             'page': page,
         }
 
@@ -129,11 +128,9 @@ def predict_rub_salary(vacancy: dict) -> float | None:
 
 
 def parse_hh_vacancies() -> dict:
-    city_id = 1
-    programming_languages = ['Javascript', 'Java', 'Python', 'Ruby', 'PHP',
+    programming_languages = ['Ruby', 'PHP',
                              'C++', 'C#']
-    return get_programmers_vacancies(program_languages=programming_languages,
-                                     city_id=city_id)
+    return get_programmers_vacancies(program_languages=programming_languages)
 
 
 if __name__ == '__main__':
