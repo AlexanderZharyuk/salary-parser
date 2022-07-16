@@ -71,8 +71,8 @@ def get_vacancy_salaries(language: str) -> ProcessedVacancies:
             print('Get HttpError. Trying reconnect...')
             continue
 
-        json_response = response.json()
-        vacancies = json_response['items']
+        api_response = response.json()
+        vacancies = api_response['items']
         for vacancy in vacancies:
             vacancy_salary = predict_rub_salary(vacancy)
             if vacancy_salary:

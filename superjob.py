@@ -38,11 +38,11 @@ def get_vacancies(secret_key: str, keywoard: str) -> dict:
             print('Get HttpError. Trying reconnect...')
             continue
 
-        response_json = response.json()
-        vacancies_on_page = response_json['objects']
+        api_response = response.json()
+        vacancies_on_page = api_response['objects']
 
         if not vacancies_on_page:
-            total_vacancies = response_json['total']
+            total_vacancies = api_response['total']
             vacancies_processed = len(total_salaries)
             average_salary = int(sum(total_salaries) / vacancies_processed)
             programing_language_vacancies = {
