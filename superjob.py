@@ -88,8 +88,8 @@ def parse_superjob_vacancies(secret_key: str) -> dict:
 def main() -> None:
     superjob_secret_key = get_superjob_secret_key()
     superjob_table_title = 'SuperJob Moscow'
-    show_table(vacancies=parse_superjob_vacancies(superjob_secret_key),
-               table_title=superjob_table_title)
+    print(show_table(vacancies=parse_superjob_vacancies(superjob_secret_key),
+                     table_title=superjob_table_title))
 
 
 if __name__ == '__main__':

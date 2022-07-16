@@ -3,7 +3,7 @@ from hh import parse_hh_vacancies
 from general_functions import show_table, get_superjob_secret_key
 
 
-if __name__ == '__main__':
+def main() -> None:
     superjob_secret_key = get_superjob_secret_key()
     superjob_table_title = 'SuperJob Moscow'
     superjob_vacancies = parse_superjob_vacancies(
@@ -13,7 +13,12 @@ if __name__ == '__main__':
     hh_table_title = 'HeadHunter Moscow'
     hh_vacancies = parse_hh_vacancies()
 
-    show_table(vacancies=superjob_vacancies, table_title=superjob_table_title)
-    show_table(vacancies=hh_vacancies, table_title=hh_table_title)
+    print(show_table(vacancies=superjob_vacancies,
+                     table_title=superjob_table_title))
+    print(show_table(vacancies=hh_vacancies, table_title=hh_table_title))
+
+
+if __name__ == '__main__':
+    main()
 
 

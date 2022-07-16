@@ -21,7 +21,7 @@ def predict_salary(salary_from: int, salary_to: int) -> int | None:
     return (salary_to + salary_from) // 2
 
 
-def show_table(vacancies: dict, table_title: str) -> None:
+def show_table(vacancies: dict, table_title: str):
     table_rows = [
         [
             'Язык программирования', 'Вакансий найдено',
@@ -40,4 +40,4 @@ def show_table(vacancies: dict, table_title: str) -> None:
         table_rows.append(table_row)
 
     table = AsciiTable(table_data=table_rows, title=table_title)
-    print(table.table)
+    return table.table

@@ -108,6 +108,11 @@ def parse_hh_vacancies() -> dict:
     return get_programmers_vacancies(program_languages=programming_languages)
 
 
-if __name__ == '__main__':
+def main() -> None:
     hh_table_title = 'HeadHunter Moscow'
-    show_table(vacancies=parse_hh_vacancies(), table_title=hh_table_title)
+    print(show_table(vacancies=parse_hh_vacancies(),
+                     table_title=hh_table_title))
+
+
+if __name__ == '__main__':
+    main()
