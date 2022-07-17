@@ -21,7 +21,7 @@ def predict_salary(salary_from: int, salary_to: int) -> int | None:
     return (salary_to + salary_from) // 2
 
 
-def show_table(vacancies: dict, table_title: str):
+def create_table(vacancies: dict, table_title: str) -> str:
     table_rows = [
         [
             'Язык программирования', 'Вакансий найдено',

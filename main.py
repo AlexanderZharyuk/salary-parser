@@ -1,6 +1,6 @@
 from superjob import parse_superjob_vacancies
 from hh import parse_hh_vacancies
-from general_functions import show_table, get_superjob_secret_key
+from general_functions import create_table, get_superjob_secret_key
 
 
 def main() -> None:
@@ -13,9 +13,9 @@ def main() -> None:
     hh_table_title = 'HeadHunter Moscow'
     hh_vacancies = parse_hh_vacancies()
 
-    print(show_table(vacancies=superjob_vacancies,
-                     table_title=superjob_table_title))
-    print(show_table(vacancies=hh_vacancies, table_title=hh_table_title))
+    print(create_table(vacancies=superjob_vacancies,
+                       table_title=superjob_table_title))
+    print(create_table(vacancies=hh_vacancies, table_title=hh_table_title))
 
 
 if __name__ == '__main__':

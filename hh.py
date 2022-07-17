@@ -6,7 +6,7 @@ import requests
 
 from tqdm import tqdm
 
-from general_functions import show_table, predict_salary
+from general_functions import create_table, predict_salary
 
 
 def get_programmers_vacancies(program_languages: list) -> dict:
@@ -47,13 +47,7 @@ def get_vacancy_salaries(language: str) -> ProcessedVacancies:
         'search_period': during_time_in_days,
     }
 
-    response = requests.get(url=url, params=params)
-    response.raise_for_status()
-
-    response_json = response.json()
-    pages = response_json['pages']
-    total_vacancies = response_json['found']
-
+    pages = 1
     processed_vacancies_salaries = []
     for page in count(0):
         if page >= pages:
@@ -72,12 +66,14 @@ def get_vacancy_salaries(language: str) -> ProcessedVacancies:
             continue
 
         api_response = response.json()
+        pages = api_response['pages']
         vacancies = api_response['items']
         for vacancy in vacancies:
             vacancy_salary = predict_rub_salary(vacancy)
             if vacancy_salary:
                 processed_vacancies_salaries.append(vacancy_salary)
 
+    total_vacancies = api_response['found']
     vacancies_processed = len(processed_vacancies_salaries)
     try:
         average_salary = int(sum(processed_vacancies_salaries) /
@@ -110,8 +106,8 @@ def parse_hh_vacancies() -> dict:
 
 def main() -> None:
     hh_table_title = 'HeadHunter Moscow'
-    print(show_table(vacancies=parse_hh_vacancies(),
-                     table_title=hh_table_title))
+    print(create_table(vacancies=parse_hh_vacancies(),
+                       table_title=hh_table_title))
 
 
 if __name__ == '__main__':
