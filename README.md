@@ -1,4 +1,4 @@
-# SALARY PARSER
+# AVERAGE SALARY PARSER
 
 Scripts for obtaining information on salaries at labor exchanges.
 
